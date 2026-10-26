@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECAIR · Prototype Ops · Lot Particulier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F5F6F8}
+a{color:#1D4ED8}a:hover{color:#1E3A8A}
+button{font-family:inherit}
+textarea{font-family:inherit}
+.docname{background:transparent;border:0;padding:0;margin:0;text-align:left;cursor:pointer;font:inherit;color:#101828;display:inline-flex;align-items:center;gap:6px;min-height:32px}
+.docname .eye{opacity:0;transition:opacity .15s}
+.docname:hover .eye,.docname:focus-visible .eye{opacity:1}
+.docname:hover .dn{text-decoration:underline}
+.okcell{background:transparent;border:0;padding:0 6px;min-height:44px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;border-radius:6px}
+.okcell .eye{opacity:.55}
+.okcell:hover .eye{opacity:1}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<template id="tpl">
+
+<div style="font-family: Inter, system-ui, -apple-system, sans-serif; color: #101828; background: #F5F6F8; min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch; font-size: 14px; line-height: 1.45">
+
+  <nav aria-label="Navigation principale" style="flex: 1 1 232px; max-width: 100%; background: #FFFFFF; border-right: 1px solid #E4E7EC; padding: 20px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 6px">
+      <div style="width: 26px; height: 26px; border-radius: 7px; background: #2659F1; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">E</div>
+      <span style="font-weight: 600; font-size: 15px">Ecair</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <a href="#" style="display: flex; justify-content: space-between; align-items: center; padding: 9px 10px; border-radius: 8px; color: #344054; text-decoration: none">Notifications <span style="background: #2659F1; color: #FFFFFF; border-radius: 6px; padding: 1px 7px; font-size: 12px; font-weight: 600">23</span></a>
+      <a href="#" style="display: flex; justify-content: space-between; align-items: center; padding: 9px 10px; border-radius: 8px; color: #344054; text-decoration: none">Exceptions à traiter <span style="background: #FFF1DE; color: #8A4B08; border-radius: 6px; padding: 1px 7px; font-size: 12px; font-weight: 600">14</span></a>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 12px; color: #5B6474; padding: 0 10px 4px">Mes projets</span>
+      <a href="#" style="display: flex; justify-content: space-between; padding: 9px 10px; border-radius: 8px; color: #344054; text-decoration: none">Crédit Travaux <span style="color: #5B6474; font-size: 12px">3907</span></a>
+      <a href="#" style="display: flex; justify-content: space-between; padding: 9px 10px; border-radius: 8px; color: #344054; text-decoration: none">MPR Ampleur <span style="color: #5B6474; font-size: 12px">771</span></a>
+      <a href="#" style="display: flex; justify-content: space-between; padding: 9px 10px; border-radius: 8px; background: #EEF3FF; color: #1D4ED8; font-weight: 600; text-decoration: none">MPR &amp; CEE Monogeste <span style="background: #2659F1; color: #FFFFFF; border-radius: 6px; padding: 1px 7px; font-size: 12px">719</span></a>
+      <a href="#" style="display: flex; justify-content: space-between; padding: 9px 10px; border-radius: 8px; color: #344054; text-decoration: none">BAR-TH-174/5 <span style="color: #5B6474; font-size: 12px">299</span></a>
+    </div>
+  </nav>
+
+  <main style="flex: 999 1 560px; min-width: 0; padding: 24px 32px 48px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <div style="font-size: 13px; color: #5B6474">MPR &amp; CEE Monogeste  /  <span style="color: #101828; font-weight: 500">Marie Dupont</span></div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+            <h1 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em">Lot Particulier</h1>
+            <span style="background: #F2F4F7; color: #344054; border-radius: 6px; padding: 3px 9px; font-size: 12px; font-weight: 600">{{lotStatus}}</span>
+          </div>
+          <div style="color: #5B6474">{{lotSubline}}</div>
+        </div>
+        <sc-if value="{{allResolved}}" hint-placeholder-val="{{ false }}">
+          <button type="button" style="background: #2E5E46; color: #FFFFFF; border: 0; border-radius: 8px; padding: 0 18px; height: 44px; font-weight: 600; font-size: 14px; cursor: pointer">Valider le lot</button>
+        </sc-if>
+        <sc-if value="{{notAllResolved}}" hint-placeholder-val="{{ true }}">
+          <button type="button" disabled="disabled" style="background: #E9ECF1; color: #5B6474; border: 0; border-radius: 8px; padding: 0 18px; height: 44px; font-weight: 600; font-size: 14px; cursor: not-allowed">Valider le lot · 1 écart en cours</button>
+        </sc-if>
+      </div>
+    </div>
+
+    <div role="status" style="background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 12px; padding: 14px 18px; display: flex; gap: 12px; align-items: flex-start">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC6803" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-weight: 600">Écart de nom détecté le 18/06 au dépôt de l’avis d’imposition</span>
+        <span style="color: #475467">Une demande de livret de famille a été envoyée automatiquement par email au Pro et à la cliente le 18/06. Aucune action n’est requise pour l’instant : le lot sera recontrôlé dès le dépôt de la pièce.</span>
+      </div>
+    </div>
+
+    <section aria-labelledby="coherence-title" style="background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 12px; overflow: hidden">
+      <div style="padding: 20px 24px 16px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <h2 id="coherence-title" style="margin: 0; font-size: 18px; font-weight: 600">Cohérence du lot</h2>
+          <span style="color: #5B6474; font-size: 13px">Survolez le nom d’un document pour l’ouvrir · cliquez sur un écart pour le traiter</span>
+        </div>
+        <span style="color: #475467; font-size: 13px">Propriétaire bailleur · logement loué</span>
+      </div>
+
+      <div style="overflow-x: auto">
+        <div style="min-width: 1100px">
+          <div style="display: grid; grid-template-columns: 260px repeat(6, minmax(0, 1fr)); column-gap: 16px; padding: 10px 24px 0; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #667085">
+            <span></span>
+            <span style="grid-column: span 3; border-bottom: 1px solid #D0D5DD; padding-bottom: 6px">Informations personnelles</span>
+            <span style="border-bottom: 1px solid #D0D5DD; padding-bottom: 6px">Logement</span>
+            <span style="grid-column: span 2; border-bottom: 1px solid #D0D5DD; padding-bottom: 6px">Foyer fiscal</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 260px repeat(6, minmax(0, 1fr)); column-gap: 16px; padding: 12px 24px; align-items: center">
+            <span style="font-size: 12px; font-weight: 600; color: #667085">Document</span>
+            <sc-for list="{{keys}}" as="k" hint-placeholder-count="6">
+              <div style="display: flex; align-items: center; gap: 8px; min-width: 0">
+                <span style="font-size: 13px; font-weight: 600; color: #344054">{{k.label}}</span>
+                <sc-if value="{{k.isEcart}}" hint-placeholder-val="{{ false }}">
+                  <span style="display: inline-flex; align-items: center; gap: 4px; color: #B54708; font-size: 11px; font-weight: 600"><span style="width: 7px; height: 7px; border-radius: 50%; background: #F79009"></span>1 écart</span>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <sc-for list="{{sections}}" as="sec" hint-placeholder-count="2">
+            <div>
+              <div style="padding: 20px 24px 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #667085">{{sec.label}}</div>
+              <div style="display: grid; grid-template-columns: 260px repeat(6, minmax(0, 1fr)); column-gap: 16px; padding: 12px 24px; align-items: center; border-top: 1px solid #EAECF0; border-bottom: 1px solid #EAECF0">
+                <div style="display: flex; flex-direction: column; gap: 2px">
+                  <span style="font-weight: 600">{{sec.refTitle}}</span>
+                  <span style="font-size: 12px; color: #667085">Saisie à la création du dossier</span>
+                </div>
+                <sc-for list="{{sec.refCells}}" as="rc" hint-placeholder-count="5">
+                  <span style="font-size: 14px; font-weight: 600; color: {{rc.color}}">{{rc.v}}</span>
+                </sc-for>
+              </div>
+              <sc-for list="{{sec.docs}}" as="d" hint-placeholder-count="3">
+                <div style="display: grid; grid-template-columns: 260px repeat(6, minmax(0, 1fr)); column-gap: 16px; padding: 8px 24px; align-items: center; border-top: 1px solid #F2F4F7; min-height: 48px">
+                  <div style="display: flex; flex-direction: column; min-width: 0">
+                    <sc-if value="{{d.hasDoc}}" hint-placeholder-val="{{ true }}">
+                      <button type="button" class="docname" onClick="{{d.open}}" aria-label="{{d.aria}}">
+                        <span class="dn" style="font-weight: 500">{{d.name}}</span>
+                        <svg class="eye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      </button>
+                    </sc-if>
+                    <sc-if value="{{d.noDoc}}" hint-placeholder-val="{{ false }}">
+                      <span style="font-weight: 500; min-height: 32px; display: inline-flex; align-items: center">{{d.name}}</span>
+                    </sc-if>
+                    <span style="font-size: 12px; color: #667085">{{d.meta}}</span>
+                  </div>
+                  <sc-for list="{{d.cells}}" as="c" hint-placeholder-count="5">
+                    <div style="min-width: 0">
+                      <sc-if value="{{c.isOk}}" hint-placeholder-val="{{ true }}">
+                        <button type="button" class="okcell" onClick="{{c.open}}" aria-label="{{c.aria}}">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#17804A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                        </button>
+                      </sc-if>
+                      <sc-if value="{{c.isNa}}" hint-placeholder-val="{{ false }}">
+                        <span aria-label="Non concerné" style="color: #C0C5CE; padding-left: 8px">—</span>
+                      </sc-if>
+                      <sc-if value="{{c.isDeclared}}" hint-placeholder-val="{{ false }}">
+                        <span style="font-size: 12px; color: #475467; padding-left: 6px">Écart déclaré par le Pro</span>
+                      </sc-if>
+                      <sc-if value="{{c.isMissing}}" hint-placeholder-val="{{ false }}">
+                        <span style="font-size: 12px; color: #475467; padding-left: 6px">{{c.missingLabel}}</span>
+                      </sc-if>
+                      <sc-if value="{{c.isEcartCell}}" hint-placeholder-val="{{ false }}">
+                        <button type="button" onClick="{{c.pick}}" style="background: transparent; border: 0; padding: 4px 6px; min-height: 44px; text-align: left; cursor: pointer; font: inherit; display: flex; flex-direction: column; gap: 1px; border-radius: 6px">
+                          <span style="font-size: 14px; font-weight: 600; color: #101828">{{c.value}}</span>
+                          <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: {{c.labelColor}}"><span style="width: 6px; height: 6px; border-radius: 50%; background: {{c.dotColor}}"></span>{{c.label}}</span>
+                        </button>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 18px; padding: 14px 24px; border-top: 1px solid #EAECF0; font-size: 12px; color: #667085">
+        <span style="display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#17804A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Cohérent</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 7px; height: 7px; border-radius: 50%; background: #F79009"></span>Écart avec la référence</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="color: #C0C5CE">—</span>Non concerné</span>
+      </div>
+    </section>
+
+    <section aria-label="Étapes du projet" style="background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 12px; overflow: hidden">
+      <div role="tablist" aria-label="Vues du projet" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 0 12px; border-bottom: 1px solid #E4E7EC; background: #F9FAFB">
+        <button type="button" role="tab" aria-selected="true" style="background: #FFFFFF; border: 0; border-bottom: 2px solid #2659F1; padding: 0 14px; height: 46px; font-size: 13px; font-weight: 600; color: #101828; cursor: pointer">Tâches à réaliser <span style="background: #2659F1; color: #FFFFFF; border-radius: 6px; padding: 1px 6px; font-size: 11px; margin-left: 4px">2</span></button>
+        <button type="button" role="tab" aria-selected="false" style="background: transparent; border: 0; padding: 0 14px; height: 46px; font-size: 13px; font-weight: 500; color: #5B6474; cursor: pointer">Documents</button>
+        <button type="button" role="tab" aria-selected="false" style="background: transparent; border: 0; padding: 0 14px; height: 46px; font-size: 13px; font-weight: 500; color: #5B6474; cursor: pointer">Détails du projet</button>
+      </div>
+
+      <div style="padding: 20px; display: flex; flex-direction: column; gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; gap: 12px; align-items: center">
+            <div style="width: 40px; height: 40px; border-radius: 10px; background: #2659F1; display: flex; align-items: center; justify-content: center; flex: none">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.5 2.5 4.5-5"></path></svg>
+            </div>
+            <div style="display: flex; flex-direction: column">
+              <span style="font-weight: 600; font-size: 15px">Vous avez 2 actions à réaliser sur ce projet</span>
+              <span style="font-size: 13px; color: #5B6474">Le lot Particulier se résout sans vous tant qu’aucune alerte n’est levée.</span>
+            </div>
+          </div>
+          <sc-for list="{{myTasks}}" as="t" hint-placeholder-count="2">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid #E4E7EC; border-radius: 10px">
+              <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px"><span style="font-weight: 600">{{t.title}}</span><span style="color: #5B6474">{{t.desc}}</span></span>
+              <span style="background: #FFF1DE; color: #8A4B08; border-radius: 6px; padding: 2px 8px; font-size: 12px; font-weight: 600">Prévu aujourd’hui</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column">
+            <span style="font-weight: 600; font-size: 15px">En attente des autres</span>
+            <span style="font-size: 13px; color: #5B6474">{{othersLine}}</span>
+          </div>
+          <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <span style="align-self: flex-start; background: #F2F4F7; color: #344054; border-radius: 6px; padding: 2px 8px; font-size: 12px; font-weight: 500">{{g.actor}}</span>
+              <sc-for list="{{g.tasks}}" as="t" hint-placeholder-count="2">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; margin-left: 16px; border: 1px solid #EEF0F3; border-radius: 10px">
+                  <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px"><span style="font-weight: 600">{{t.title}}</span><span style="color: #5B6474">{{t.desc}}</span></span>
+                  <span style="color: #475467; font-size: 12px; font-weight: 500">{{t.chip}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="history-title" style="background: #FFFFFF; border: 1px solid #E4E7EC; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px">
+      <h2 id="history-title" style="margin: 0; font-size: 15px; font-weight: 600">Historique du lot</h2>
+      <sc-for list="{{history}}" as="h" hint-placeholder-count="7">
+        <div style="display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 10px">
+          <span style="font-size: 12px; color: #5B6474; padding-top: 1px">{{h.date}}</span>
+          <div style="display: flex; flex-direction: column; gap: 1px">
+            <sc-if value="{{h.highlight}}" hint-placeholder-val="{{ false }}"><span style="font-weight: 600; color: #B54708">{{h.text}}</span></sc-if>
+            <sc-if value="{{h.plain}}" hint-placeholder-val="{{ true }}"><span>{{h.text}}</span></sc-if>
+            <span style="font-size: 12px; color: #5B6474">{{h.by}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </section>
+  </main>
+
+  <sc-if value="{{panelOpen}}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; z-index: 20; display: flex; justify-content: flex-end">
+      <button type="button" aria-label="Fermer le panneau" onClick="{{closePanel}}" style="position: absolute; inset: 0; width: 100%; height: 100%; background: rgba(16, 24, 40, 0.32); border: 0; padding: 0; cursor: pointer"></button>
+      <aside role="dialog" aria-modal="true" aria-labelledby="panel-title" style="position: relative; width: 520px; max-width: 100%; height: 100%; background: #FFFFFF; box-shadow: -12px 0 32px rgba(16, 24, 40, 0.14); display: flex; flex-direction: column">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 16px 10px 12px; border-bottom: 1px solid #E4E7EC">
+          <div style="display: flex; align-items: center; gap: 4px">
+            <button type="button" aria-label="Fermer le panneau" onClick="{{closePanel}}" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; border-radius: 8px; color: #344054; cursor: pointer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 17 5-5-5-5"></path><path d="m13 17 5-5-5-5"></path></svg>
+            </button>
+            <sc-if value="{{showBack}}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{backToEcart}}" style="height: 36px; padding: 0 10px; background: transparent; border: 0; color: #1D4ED8; font-size: 13px; font-weight: 600; cursor: pointer">← Retour à l’écart</button>
+            </sc-if>
+          </div>
+          <span style="font-size: 13px; color: #5B6474">{{panelCaption}}</span>
+        </div>
+
+        <sc-if value="{{isEcartMode}}" hint-placeholder-val="{{ true }}">
+          <div style="flex: 1 1 auto; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <span style="font-size: 13px; color: #5B6474">Lot Particulier · Marie Dupont</span>
+              <h2 id="panel-title" style="margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em">Écart sur le nom</h2>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+                <span style="background: #F2F4F7; color: #344054; border-radius: 6px; padding: 3px 9px; font-size: 12px; font-weight: 500">Cas connu : nom d’usage</span>
+                <span style="font-size: 12px; color: #344054">{{attempts}}</span>
+              </div>
+            </div>
+
+            <div style="border: 1px solid #E4E7EC; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px">
+              <span style="font-size: 12px; font-weight: 600; color: #475467">Demande en cours</span>
+              <span>{{requestLine}}</span>
+            </div>
+
+            <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; flex-direction: column; gap: 20px">
+                <p style="margin: 0; color: #344054">La pièce d’identité et le justificatif de propriété indiquent Martin, nom de naissance lu sur la bande MRZ. Le dossier et l’avis d’imposition indiquent Dupont, le nom d’usage. Aucune pièce ne fait encore le lien entre les deux.</p>
+                <div style="display: flex; flex-direction: column; gap: 8px">
+                  <span style="font-size: 12px; font-weight: 600; color: #5B6474">Comparaison</span>
+                  <div style="border: 1px solid #E4E7EC; border-radius: 10px; overflow: hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid #E4E7EC">
+                      <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #5B6474">Pièce d’identité · MRZ</span><span style="font-weight: 600">MARTIN Marie</span></div>
+                      <button type="button" onClick="{{openCni}}" style="height: 36px; padding: 0 12px; background: #FFFFFF; border: 1px solid #D0D5DD; border-radius: 8px; color: #1D4ED8; font-size: 13px; font-weight: 600; cursor: pointer">Voir le document</button>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px">
+                      <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #5B6474">Avis d’imposition · 2D-Doc</span><span style="font-weight: 600">DUPONT Marie</span></div>
+                      <button type="button" onClick="{{openAvis}}" style="height: 36px; padding: 0 12px; background: #FFFFFF; border: 1px solid #D0D5DD; border-radius: 8px; color: #1D4ED8; font-size: 13px; font-weight: 600; cursor: pointer">Voir le document</button>
+                    </div>
+                  </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px">
+                  <label for="msg-pro" style="font-size: 13px; font-weight: 600">Message de relance <span style="font-weight: 400; color: #5B6474">· modifiable avant envoi</span></label>
+                  <textarea id="msg-pro" rows="4" defaultValue="Nous n’avons pas encore reçu le livret de famille de Mme Dupont. Il permet de relier son nom d’usage (Dupont) à son nom de naissance (Martin) et de valider le lot Particulier." style="width: 100%; box-sizing: border-box; border: 1px solid #D0D5DD; border-radius: 8px; padding: 10px 12px; font-size: 14px; color: #101828; resize: vertical"></textarea>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{showDone}}" hint-placeholder-val="{{ false }}">
+              <div style="border: 1px solid #ABEFC6; background: #F6FEF9; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-weight: 600; color: #085D3A">{{doneTitle}}</span>
+                <span style="color: #085D3A">{{doneText}}</span>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="border-top: 1px solid #E4E7EC; padding: 16px 24px; display: flex; flex-direction: column; gap: 10px">
+            <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; flex-direction: column; gap: 10px">
+                <button type="button" onClick="{{relance}}" style="width: 100%; background: #2659F1; color: #FFFFFF; border: 0; border-radius: 8px; height: 44px; font-weight: 600; font-size: 14px; cursor: pointer">Relancer le Pro et la cliente</button>
+                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+                  <button type="button" onClick="{{fixRef}}" style="background: #FFFFFF; color: #344054; border: 1px solid #D0D5DD; border-radius: 8px; min-height: 44px; padding: 6px 10px; font-weight: 600; font-size: 13px; cursor: pointer">Corriger la référence du dossier</button>
+                  <button type="button" onClick="{{markOk}}" style="background: #FFFFFF; color: #1E6B43; border: 1px solid #9CCBAE; border-radius: 8px; min-height: 44px; padding: 6px 10px; font-weight: 600; font-size: 13px; cursor: pointer">Valider l’écart (justifié)</button>
+                </div>
+                <button type="button" onClick="{{takeManual}}" style="background: transparent; border: 0; color: #344054; text-decoration: underline; font-size: 13px; font-weight: 500; min-height: 44px; cursor: pointer">Prendre la main : revue manuelle</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{showDone}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; gap: 10px">
+                <button type="button" onClick="{{closePanel}}" style="flex: 1 1 auto; background: #2659F1; color: #FFFFFF; border: 0; border-radius: 8px; height: 44px; font-weight: 600; font-size: 14px; cursor: pointer">Retour au lot</button>
+                <button type="button" onClick="{{undo}}" style="background: #FFFFFF; color: #344054; border: 1px solid #D0D5DD; border-radius: 8px; height: 44px; padding: 0 16px; font-weight: 600; font-size: 14px; cursor: pointer">Annuler</button>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{isDocMode}}" hint-placeholder-val="{{ false }}">
+          <div style="flex: 1 1 auto; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 18px">
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <span style="font-size: 13px; color: #5B6474">{{dv.meta}}</span>
+              <h2 id="panel-title" style="margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em">{{dv.docName}}</h2>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{dv.keyTabs}}" as="kt" hint-placeholder-count="3">
+                <button type="button" onClick="{{kt.pick}}" style="{{kt.style}}">{{kt.label}}</button>
+              </sc-for>
+            </div>
+            <div style="border: 1px solid #E4E7EC; border-radius: 10px; padding: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+              <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #5B6474">Valeur lue sur le document</span><span style="font-weight: 600; font-size: 15px">{{dv.value}}</span></div>
+              <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #5B6474">Référence</span><span style="font-weight: 500">{{dv.ref}}</span></div>
+              <div style="display: flex; flex-direction: column; gap: 2px; align-items: flex-start"><span style="font-size: 12px; color: #5B6474">Statut</span>
+                <sc-if value="{{dv.isEcart}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 5px; color: #B54708; font-weight: 600; font-size: 13px"><span style="width: 7px; height: 7px; border-radius: 50%; background: #F79009"></span>Écart avec la référence</span></sc-if>
+                <sc-if value="{{dv.isOk}}" hint-placeholder-val="{{ true }}"><span style="color: #17804A; font-weight: 600; font-size: 13px">Cohérent</span></sc-if>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #5B6474">Source de la lecture</span><span style="font-weight: 500">{{dv.source}}</span></div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <span style="font-size: 12px; font-weight: 600; color: #5B6474">Document · zone lue surlignée</span>
+              <div style="background: #EEF0F3; border-radius: 10px; padding: 16px">
+                <sc-if value="{{dv.isCni}}" hint-placeholder-val="{{ true }}">
+                  <div style="background: #F4F7FB; border: 1px solid #C9D3E0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 12px; color: #1F2A3D">
+                    <span style="font-size: 10px; letter-spacing: 0.06em; font-weight: 600; color: #3B4A63">RÉPUBLIQUE FRANÇAISE · CARTE NATIONALE D’IDENTITÉ</span>
+                    <div style="display: flex; gap: 14px">
+                      <div aria-hidden="true" style="width: 74px; height: 92px; flex: none; border-radius: 6px; background: #D5DCE6"></div>
+                      <div style="display: flex; flex-direction: column; gap: 6px">
+                        <div><span style="color: #5B6474; font-size: 10px; display: block">Nom</span><span style="{{dv.hlNom}}">MARTIN</span></div>
+                        <div><span style="color: #5B6474; font-size: 10px; display: block">Nom d’usage</span><span>—</span></div>
+                        <div><span style="color: #5B6474; font-size: 10px; display: block">Prénoms</span><span style="{{dv.hlPrenom}}">Marie, Claire</span></div>
+                      </div>
+                    </div>
+                    <div style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; background: #E7ECF3; border-radius: 6px; padding: 6px 8px; display: flex; flex-direction: column; gap: 2px">
+                      <span style="{{dv.hlMrz}}">IDFRAMARTIN&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+                      <span style="{{dv.hlMrz}}">MARIE&lt;&lt;CLAIRE&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{dv.isTaxDoc}}" hint-placeholder-val="{{ false }}">
+                  <div style="background: #FFFFFF; border: 1px solid #D0D5DD; padding: 16px; display: flex; flex-direction: column; gap: 12px; font-size: 12px; color: #1F2A3D">
+                    <div style="display: flex; flex-direction: column; gap: 2px">
+                      <span style="font-size: 10px; letter-spacing: 0.05em; font-weight: 600; color: #3B4A63">{{dv.mockOrg}}</span>
+                      <span style="font-weight: 600; font-size: 13px">{{dv.mockTitle}}</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 2px">
+                      <span style="color: #5B6474; font-size: 10px">{{dv.mockWho}}</span>
+                      <span><span style="{{dv.hlNom}}">{{dv.mockNom}}</span> <span style="{{dv.hlPrenom}}">{{dv.mockPrenom}}</span></span>
+                      <span style="{{dv.hlAdresse}}">{{dv.mockAdr}}</span>
+                    </div>
+                    <sc-if value="{{dv.hasFiscal}}" hint-placeholder-val="{{ true }}">
+                      <div style="border-top: 1px solid #E4E7EC; padding-top: 8px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px">
+                        <span style="color: #5B6474">Année de l’avis</span><span style="{{dv.hlAnnee}}">2025</span>
+                        <span style="color: #5B6474">Personnes du foyer</span><span style="{{dv.hlFoyer}}">{{dv.mockFoyer}}</span>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </div>
+              <span style="font-size: 12px; color: #5B6474">Données fictives pour la maquette.</span>
+            </div>
+            <sc-if value="{{dv.hasVerdict}}" hint-placeholder-val="{{ false }}">
+              <div style="border: 1px solid #ABEFC6; background: #F6FEF9; border-radius: 10px; padding: 12px 14px; color: #085D3A">{{dv.verdictText}}</div>
+            </sc-if>
+          </div>
+          <div style="border-top: 1px solid #E4E7EC; padding: 16px 24px; display: flex; flex-direction: column; gap: 10px">
+            <sc-if value="{{dv.isEcart}}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{backToEcart}}" style="width: 100%; background: #2659F1; color: #FFFFFF; border: 0; border-radius: 8px; height: 44px; font-weight: 600; font-size: 14px; cursor: pointer">Traiter l’écart</button>
+            </sc-if>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+              <button type="button" onClick="{{dv.confirm}}" style="background: #FFFFFF; color: #1E6B43; border: 1px solid #9CCBAE; border-radius: 8px; min-height: 44px; font-weight: 600; font-size: 13px; cursor: pointer">La lecture est correcte</button>
+              <button type="button" onClick="{{dv.flag}}" style="background: #FFFFFF; color: #344054; border: 1px solid #D0D5DD; border-radius: 8px; min-height: 44px; font-weight: 600; font-size: 13px; cursor: pointer">Corriger la valeur lue</button>
+            </div>
+          </div>
+        </sc-if>
+      </aside>
+    </div>
+  </sc-if>
+</div>
+</template>
+<script>
+(function(){
+  var HOLE=/\{\{\s*([^}]+?)\s*\}\}/g;
+  function resolve(path, scope){ var parts=path.trim().split('.'); var v=scope; for(var i=0;i<parts.length;i++){ if(v==null) return undefined; v=v[parts[i]]; } return v; }
+  function interp(str, scope){ return str.replace(HOLE, function(_, p){ var v=resolve(p, scope); return v==null ? '' : String(v); }); }
+  function evalHole(str, scope){ if(str==null) return undefined; var m=str.match(/^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/); return m ? resolve(m[1], scope) : str; }
+  function renderList(nodes, scope){ var out=[]; for(var i=0;i<nodes.length;i++){ out.push.apply(out, renderNode(nodes[i], scope)); } return out; }
+  function renderNode(n, scope){
+    if(n.nodeType===3){ return [document.createTextNode(interp(n.nodeValue, scope))]; }
+    if(n.nodeType!==1) return [];
+    var tag=n.localName;
+    if(tag==='sc-for'){ var list=evalHole(n.getAttribute('list'), scope)||[]; var as=n.getAttribute('as')||'item'; var res=[]; for(var i=0;i<list.length;i++){ var sc=Object.create(scope); sc[as]=list[i]; res.push.apply(res, renderList(n.childNodes, sc)); } return res; }
+    if(tag==='sc-if'){ return evalHole(n.getAttribute('value'), scope) ? renderList(n.childNodes, scope) : []; }
+    var el=document.createElementNS(n.namespaceURI, tag);
+    var dv=null;
+    for(var a=0;a<n.attributes.length;a++){
+      var at=n.attributes[a], name=at.name;
+      if(name.indexOf('hint-')===0) continue;
+      if(name==='onclick'){ var fn=evalHole(at.value, scope); if(typeof fn==='function') el.addEventListener('click', fn); continue; }
+      if(name==='defaultvalue'){ dv=interp(at.value, scope); continue; }
+      el.setAttribute(name, interp(at.value, scope));
+    }
+    var kids=renderList(n.childNodes, scope);
+    for(var k=0;k<kids.length;k++) el.appendChild(kids[k]);
+    if(dv!=null) el.value=dv;
+    return [el];
+  }
+  window.DCLogic=function(props){ this.props=props||{}; };
+  window.DCLogic.prototype.setState=function(patch){ var p=typeof patch==='function'?patch(this.state):patch; this.state=Object.assign({}, this.state, p); window.__dcRender(); };
+  window.__dcMount=function(Comp){
+    var tpl=document.getElementById('tpl').content;
+    var app=document.getElementById('app');
+    var comp=new Comp({});
+    window.__dcRender=function(){ var nodes=renderList(tpl.childNodes, comp.renderVals()); app.replaceChildren.apply(app, nodes); };
+    window.__dcRender();
+  };
+})();
+</script>
+<script>
+class Component extends DCLogic {
+  state = { panelOpen: false, mode: 'ecart', docId: 'cni', keyId: 'nom', fromEcart: false, nomState: null, verdicts: {} };
+
+  renderVals() {
+    const s = this.state;
+    const self = this;
+    const st = s.nomState;
+    const resolvedNom = st === 'ok' || st === 'ref';
+    const verdicts = s.verdicts || {};
+
+    const keyDefs = [
+      { id: 'nom', label: 'Nom', ref: 'Dupont' },
+      { id: 'prenom', label: 'Prénom', ref: 'Marie' },
+      { id: 'domicile', label: 'Adresse de domicile', ref: '4 av. Foch, 69006 Lyon' },
+      { id: 'logement', label: 'Adresse du logement', ref: '12 rue des Lilas, 69003 Lyon' },
+      { id: 'annee', label: 'Année fiscale', ref: '2025' },
+      { id: 'foyer', label: 'Personnes', ref: '3' }
+    ];
+    const tenantRef = { nom: 'Leroy', prenom: 'Thomas', domicile: '12 rue des Lilas, 69003 Lyon', logement: '12 rue des Lilas, 69003 Lyon', annee: '2025', foyer: '—' };
+    const clientRef = {};
+    keyDefs.forEach((k) => { clientRef[k.id] = k.ref; });
+
+    const ADR = '12 rue des Lilas, 69003 Lyon';
+    const DGFIP = 'DIRECTION GÉNÉRALE DES FINANCES PUBLIQUES';
+    const DOCS = {
+      cni: { name: 'Pièce d’identité', meta: 'CNI · déposée le 12/06', source: 'Bande MRZ · lecture fiable', vals: { nom: 'MARTIN', prenom: 'Marie' } },
+      avis: { name: 'Avis d’imposition', meta: 'Avis 2025 · déposé le 18/06', source: '2D-Doc signé · lecture fiable', vals: { nom: 'DUPONT', prenom: 'Marie', domicile: '4 av. Foch, 69006 Lyon', annee: '2025', foyer: '3' }, mock: { org: DGFIP, title: 'Avis d’impôt 2025 sur les revenus de 2024', who: 'Déclarant 1', nom: 'DUPONT', prenom: 'Marie', adr: '4 avenue Foch, 69006 Lyon', foyer: '3', fiscal: true } },
+      propriete: { name: 'Justificatif de propriété', meta: 'Taxe foncière 2025 · déposée le 12/06', source: 'Lu par l’IA · confiance 86 %', vals: { nom: 'MARTIN', prenom: 'Marie', logement: ADR }, mock: { org: DGFIP, title: 'Avis de taxe foncière 2025', who: 'Propriétaire · bien désigné', nom: 'MARTIN', prenom: 'Marie', adr: ADR, foyer: '', fiscal: false } },
+      locAvis: { tenant: true, name: 'Avis d’imposition du locataire', meta: 'Avis 2025 · déposé le 14/06', source: '2D-Doc signé · lecture fiable', vals: { nom: 'LEROY', prenom: 'Thomas', domicile: ADR, logement: ADR, annee: '2025' }, mock: { org: DGFIP, title: 'Avis d’impôt 2025 sur les revenus de 2024', who: 'Déclarant 1', nom: 'LEROY', prenom: 'Thomas', adr: ADR, foyer: '1', fiscal: true } },
+      locDom: { tenant: true, name: 'Justificatif de domicile du locataire', meta: 'Facture d’énergie · déposée le 14/06', source: '2D-Doc signé · lecture fiable', vals: { nom: 'LEROY', prenom: 'Thomas', domicile: ADR, logement: ADR }, mock: { org: 'FOURNISSEUR D’ÉNERGIE', title: 'Facture d’électricité · [DATE]', who: 'Titulaire du contrat', nom: 'LEROY', prenom: 'Thomas', adr: ADR, foyer: '', fiscal: false } }
+    };
+
+    const NA = { k: 'na' }, OK = { k: 'ok' }, EC = { k: 'ecart', v: 'Martin' }, DEC = { k: 'declared' };
+    const rows = [
+      { sec: 'client', docId: 'cni', cells: { nom: EC, prenom: OK, domicile: NA, logement: NA, annee: NA, foyer: NA } },
+      { sec: 'client', docId: 'avis', cells: { nom: OK, prenom: OK, domicile: OK, logement: DEC, annee: OK, foyer: OK } },
+      { sec: 'client', docId: 'propriete', cells: { nom: EC, prenom: OK, domicile: NA, logement: OK, annee: NA, foyer: NA } },
+      { sec: 'client', docId: null, name: 'Livret de famille', meta: 'Requis : nom d’usage ≠ nom de naissance', cells: { nom: { k: 'missing' }, prenom: NA, domicile: NA, logement: NA, annee: NA, foyer: NA } },
+      { sec: 'tenant', docId: 'locAvis', cells: { nom: OK, prenom: OK, domicile: OK, logement: OK, annee: OK, foyer: NA } },
+      { sec: 'tenant', docId: 'locDom', cells: { nom: OK, prenom: OK, domicile: OK, logement: OK, annee: NA, foyer: NA } }
+    ];
+    const cellsOf = {};
+    rows.forEach((r) => { if (r.docId) cellsOf[r.docId] = r.cells; });
+    const firstKey = (docId) => { const c = cellsOf[docId]; return keyDefs.find((k) => c[k.id].k !== 'na' && c[k.id].k !== 'declared').id; };
+
+    const openDoc = (docId, keyId, fromEcart) => () => self.setState({ panelOpen: true, mode: 'doc', docId: docId, keyId: keyId, fromEcart: !!fromEcart });
+    const openEcart = () => self.setState({ panelOpen: true, mode: 'ecart', fromEcart: false });
+
+    const ecLabel = { pro: '', relance: 'Relancé aujourd’hui', manual: 'Revue manuelle en cours', ok: 'Écart justifié', ref: 'Référence corrigée' };
+    const cellLabel = st ? ecLabel[st] : 'Demande envoyée le 18/06';
+    const cellColor = resolvedNom ? '#17804A' : (st === 'manual' ? '#1D4ED8' : '#B54708');
+    const cellDot = resolvedNom ? '#17804A' : (st === 'manual' ? '#2659F1' : '#F79009');
+
+    const docs = rows.map((r) => {
+      const D = r.docId ? DOCS[r.docId] : null;
+      return {
+        sec: r.sec,
+        name: D ? D.name : r.name,
+        meta: D ? D.meta : r.meta,
+        hasDoc: !!D, noDoc: !D,
+        open: D ? openDoc(r.docId, firstKey(r.docId), false) : null,
+        aria: D ? 'Ouvrir ' + D.name : '',
+        cells: keyDefs.map((k) => {
+          const c = r.cells[k.id];
+          const o = { isOk: c.k === 'ok', isNa: c.k === 'na', isMissing: c.k === 'missing', isEcartCell: c.k === 'ecart', isDeclared: c.k === 'declared' };
+          if (c.k === 'ok') { o.open = openDoc(r.docId, k.id, false); o.aria = k.label + ' cohérent · voir sur le document'; }
+          if (c.k === 'missing') o.missingLabel = resolvedNom ? 'Non requis' : (st === 'relance' ? 'Relancé aujourd’hui' : 'Demandé le 18/06');
+          if (c.k === 'ecart') Object.assign(o, { value: c.v, label: cellLabel, labelColor: cellColor, dotColor: cellDot, pick: openEcart });
+          return o;
+        })
+      };
+    });
+
+    const refCells = (ref) => keyDefs.map((k) => ({ v: ref[k.id], color: ref[k.id] === '—' ? '#C0C5CE' : '#101828' }));
+    const sections = [
+      { label: 'Client', refTitle: 'Référence client', refCells: refCells(clientRef), docs: docs.filter((d) => d.sec === 'client') },
+      { label: 'Locataire', refTitle: 'Référence locataire', refCells: refCells(tenantRef), docs: docs.filter((d) => d.sec === 'tenant') }
+    ];
+
+    const keys = keyDefs.map((k) => ({ label: k.label, ref: k.ref, isEcart: k.id === 'nom' && !resolvedNom }));
+
+    const D = DOCS[s.docId] || DOCS.cni;
+    const cellK = (cellsOf[s.docId] || {})[s.keyId] || OK;
+    const dvEcart = cellK.k === 'ecart' && !resolvedNom;
+    const hi = dvEcart ? 'background: #FEDF89; border-radius: 3px; padding: 0 3px; box-shadow: 0 0 0 2px #F79009;' : 'background: #D1E0FF; border-radius: 3px; padding: 0 3px; box-shadow: 0 0 0 2px #2659F1;';
+    const hl = (id) => (s.keyId === id ? hi : 'padding: 0 3px;');
+    const vKey = s.docId + ':' + s.keyId;
+    const v = verdicts[vKey];
+    const setVerdict = (val) => () => { const n = Object.assign({}, verdicts); n[vKey] = val; self.setState({ verdicts: n }); };
+    const refSet = D.tenant ? tenantRef : clientRef;
+    const keyTabs = keyDefs.filter((k) => (cellsOf[s.docId] || {})[k.id] && cellsOf[s.docId][k.id].k !== 'na' && cellsOf[s.docId][k.id].k !== 'declared').map((k) => ({
+      label: k.label,
+      pick: () => self.setState({ keyId: k.id }),
+      style: 'height: 36px; padding: 0 12px; border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; ' + (s.keyId === k.id ? 'background: #101828; color: #FFFFFF; border: 1px solid #101828;' : 'background: #FFFFFF; color: #344054; border: 1px solid #D0D5DD;')
+    }));
+    const m = D.mock || { org: '', title: '', who: '', nom: '', prenom: '', adr: '', foyer: '', fiscal: false };
+    const dv = {
+      docName: D.name, meta: D.meta, source: D.source, keyTabs: keyTabs,
+      value: D.vals[s.keyId] || '—', ref: refSet[s.keyId] || '—',
+      isEcart: dvEcart, isOk: !dvEcart,
+      isCni: s.docId === 'cni', isTaxDoc: s.docId !== 'cni',
+      mockOrg: m.org, mockTitle: m.title, mockWho: m.who, mockNom: m.nom, mockPrenom: m.prenom, mockAdr: m.adr, mockFoyer: m.foyer, hasFiscal: !!m.fiscal,
+      hlNom: hl('nom'), hlPrenom: hl('prenom'), hlAdresse: (s.keyId === 'domicile' || s.keyId === 'logement') ? hi : 'padding: 0 3px;', hlAnnee: hl('annee'), hlFoyer: hl('foyer'),
+      hlMrz: (s.keyId === 'nom' || s.keyId === 'prenom') ? hi : 'padding: 0 3px;',
+      hasVerdict: !!v,
+      verdictText: v === 'ok' ? 'Lecture confirmée et tracée dans l’historique du lot.' : 'Valeur signalée comme mal lue : le lot sera recontrôlé avec la valeur corrigée.',
+      confirm: setVerdict('ok'), flag: setVerdict('fix')
+    };
+
+    const setNom = (val) => () => self.setState({ nomState: val });
+    const doneTitles = { relance: 'Relance envoyée au Pro et à la cliente', manual: 'Vous avez pris la main sur cet écart', ok: 'Écart validé comme justifié', ref: 'Référence du dossier corrigée' };
+    const doneTexts = {
+      relance: 'Le lot reste ouvert et sera recontrôlé dès le dépôt du livret de famille.',
+      manual: 'Les demandes automatiques sont suspendues pour cet écart. Le Pro est prévenu qu’un conseiller ECAIR va le contacter.',
+      ok: 'Votre décision est tracée et visible du chargé de compte avant l’envoi au financeur.',
+      ref: 'Tous les documents du lot ont été recomparés à la nouvelle référence.'
+    };
+
+    const livretChip = st === 'relance' ? 'Relancé aujourd’hui' : (st === 'manual' ? 'Revue manuelle en cours' : 'Envoyée le 18/06');
+    const groups = [
+      { actor: 'Pro · Rénov’Habitat', tasks: (resolvedNom ? [] : [{ title: 'Ajouter le livret de famille', desc: 'Demande automatique · lot Particulier', chip: livretChip }]).concat([{ title: 'Indiquer le numéro de dossier MPR', desc: 'Renseigner le numéro de dossier MPR du bénéficiaire', chip: 'Prévu aujourd’hui' }]) },
+      { actor: 'Cliente · Marie Dupont', tasks: resolvedNom ? [] : [{ title: 'Fournir le livret de famille', desc: 'Email automatique', chip: livretChip }] }
+    ].filter((g) => g.tasks.length > 0);
+    const othersCount = groups.reduce((n, g) => n + g.tasks.length, 0);
+
+    const history = [
+      { date: '10/06', text: 'Dossier créé', by: 'Commercial Rénov’Habitat · référence : Marie Dupont' },
+      { date: '12/06', text: 'Pièce d’identité et justificatif de propriété déposés', by: 'Admin Rénov’Habitat · conformes' },
+      { date: '14/06', text: 'Pièces du locataire déposées', by: 'Admin Rénov’Habitat · cohérentes avec le lot' },
+      { date: '18/06', text: 'Avis d’imposition déposé : écart de nom détecté (Dupont / Martin)', by: 'Analyse automatique du lot', highlight: true },
+      { date: '18/06', text: 'Demande de livret de famille envoyée par email au Pro et à la cliente', by: 'Envoi automatique' }
+    ];
+    const extra = { relance: 'Relance envoyée au Pro et à la cliente', manual: 'Revue manuelle ouverte', ok: 'Écart validé comme justifié', ref: 'Référence du dossier corrigée' };
+    if (st) history.push({ date: 'Auj.', text: extra[st], by: 'Vous · Ops ECAIR' });
+
+    const statusMap = { relance: 'Relancé', manual: 'Revue manuelle', ok: 'Cohérent', ref: 'Cohérent' };
+    const subMap = { relance: 'Relance envoyée aujourd’hui · en attente du livret de famille', manual: 'Écart de nom pris en main par vous', ok: 'Tous les écarts sont traités', ref: 'Tous les écarts sont traités' };
+
+    return {
+      keys: keys, sections: sections,
+      lotStatus: st ? statusMap[st] : 'En attente du Pro',
+      lotSubline: st ? subMap[st] : 'Écart de nom en résolution automatique · demande envoyée le 18/06',
+      allResolved: resolvedNom, notAllResolved: !resolvedNom,
+      panelOpen: !!s.panelOpen,
+      closePanel: () => self.setState({ panelOpen: false }),
+      isEcartMode: s.mode !== 'doc', isDocMode: s.mode === 'doc',
+      panelCaption: s.mode === 'doc' ? 'Contrôle de la lecture' : 'Traitement de l’écart',
+      showBack: s.mode === 'doc' && !!s.fromEcart,
+      backToEcart: () => self.setState({ mode: 'ecart', fromEcart: false }),
+      openCni: openDoc('cni', 'nom', true), openAvis: openDoc('avis', 'nom', true),
+      attempts: st === 'relance' ? '2e demande sur 3 avant revue manuelle' : '1re demande sur 3 avant revue manuelle',
+      requestLine: 'Livret de famille demandé par email au Pro et à la cliente le 18/06' + (st === 'relance' ? ', relancé aujourd’hui.' : '.'),
+      showForm: !st, showDone: !!st,
+      doneTitle: st ? doneTitles[st] : '', doneText: st ? doneTexts[st] : '',
+      relance: setNom('relance'), fixRef: setNom('ref'), markOk: setNom('ok'), takeManual: setNom('manual'),
+      undo: setNom(null),
+      dv: dv,
+      myTasks: [
+        { title: 'Sélectionner la source de financement', desc: 'Renseigner le mandataire financier (Sofinco ou ECAIR)' },
+        { title: 'Sélectionner le partenaire CEE', desc: 'Remplir le formulaire' }
+      ],
+      groups: groups,
+      othersLine: othersCount + (othersCount > 1 ? ' tâches sont en cours' : ' tâche est en cours') + ' chez d’autres acteurs du projet',
+      history: history.map((h) => ({ date: h.date, text: h.text, by: h.by, highlight: !!h.highlight, plain: !h.highlight }))
+    };
+  }
+}
+window.__dcMount(Component);
+</script>
+</body>
+</html>
